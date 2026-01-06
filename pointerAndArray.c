@@ -30,17 +30,19 @@ int main(void) {
 	// int vectorOneElements = sizeof(vectorOne)/sizeof(int);
 	*/
 	// Array declaration: Two Dimensional
+	/*
 	int matrixOne[2][3] = {	{1, 2, 3}, 
 				{4, 5, 6} 
 			      };
-
+	*/
 	
+	/*
 	// Array declaration: Three Dimensional
 	int cube[3][2][4] = { {	{1, 2, 3, 4}, {5, 6, 7, 8} },
 			      {	{9, 10, 11, 12}, {13, 14, 15, 16} },
 			      {	{17, 18, 19, 20}, {21, 22, 23, 24} }
 			    };
-	
+	*/
 	
 	/*
 	printf("=============== 1D Array ===============\n");
@@ -111,8 +113,66 @@ int ***allocateCube(int depth, int rows, int cols) {
 	}
 	*/
 
+	/*
 	displayMatrix(&matrixOne[0][0], 2, 3);
 	displayCube(&cube[0][0][0], 3, 2, 4);
+	*/
+	
+	// Vector formation (5)
+	int size = 5;
+	int *vector = allocateVector(size);
+	if(!vector) return 1;
+	for(int i = 0; i < size; i++)
+		*(vector + i) = i + 1;
+	displayVector(vector, 5);
+	free(vector);
+
+	// Matrix formation (2x3)
+	int rows = 2, cols = 3;
+	int **matrix = allocateMatrix(rows, cols);
+	if(!matrix) return 1;
+
+	for(int i = 0; i < rows; i++) {
+    		for(int j = 0; j < cols; j++) {
+        		*(*(matrix + i) + j) = (i * cols) + j + 1;
+    		}
+	}
+	displayMatrix(matrix, rows, cols);
+	freeMatrix(matrix, rows);
+	
+	// Cube formation (2x3x4)
+	int depth = 2, d_rows = 3, d_cols = 4;
+	int ***cube = allocateCube(depth, d_rows, d_cols);
+	if(!cube) return 1;
+
+	for(int i = 0; i < depth; i++) {
+   		for(int j = 0; j < d_rows; j++) {
+       			for(int k = 0; k < d_cols; k++) {
+            			*(*(*(cube + i) + j) + k) = (i * d_rows * d_cols) + (j * d_cols) + k + 1;
+        		}
+    		}
+	}
+	displayCube(cube, depth, d_rows, d_cols); 
+	freeCube(cube, depth, d_rows);
+
+	// Hypercube formation (2x2x3x3)
+	int time = 2, h_depth = 2, h_rows = 3, h_cols = 3;
+	int ****hyper = allocateHyperCube(time, h_depth, h_rows, h_cols);
+	if(!hyper) return 1;
+
+	for(int t = 0; t < time; t++) {
+    		for(int d = 0; d < h_depth; d++) {
+        		for(int r = 0; r < h_rows; r++) {
+            			for(int c = 0; c < h_cols; c++) {
+                			*(*(*(*(hyper + t) + d) + r) + c) = t + d + r + c; 
+            			}
+        		}
+    		}
+	}
+
+	displayHyperCube(hyper, time, h_depth, h_rows, h_cols); 
+	freeHyperCube(hyper, time, h_depth, h_rows);
+
 
 
 	return 0;
