@@ -4,10 +4,20 @@
 
 char *getLine(void);
 char *trim(char *buffer);
+
 int *allocateVector(int size);
+int **allocateMatrix(int rows, int cols);
+int ***allocateCube(int depth, int rows, int cols);
+int ****allocateHyperCube(int time, int depths, int rows, int cols);
+
+void freeVector(int *vector);
+void freeMatrix(int **matrix);
+void freeCube(int ***cube);
+void freeHyperCube(int ****hypercube);
 
 void displayVector(int *arr, int vectorSize);
-void displayMatrix(int *arr, int rows, int cols);
+void displayMatrix(int *arr, int rows, int cols); // Non Conatgious
+void displayCube(int *arr, int depth, int rows, int cols);
 
 int main(void) {
 	/*
@@ -23,13 +33,13 @@ int main(void) {
 				{4, 5, 6} 
 			      };
 
-	/*
+	
 	// Array declaration: Three Dimensional
 	int cube[3][2][4] = { {	{1, 2, 3, 4}, {5, 6, 7, 8} },
 			      {	{9, 10, 11, 12}, {13, 14, 15, 16} },
 			      {	{17, 18, 19, 20}, {21, 22, 23, 24} }
 			    };
-	*/
+	
 	
 	/*
 	printf("=============== 1D Array ===============\n");
@@ -77,6 +87,20 @@ int main(void) {
 	printf("=============== One Dimensional Array of Pointers ===============\n");
 	int *arrayOfPointers[5];
 	for(int i = 0; i < 5; i++) {
+int ***allocateCube(int depth, int rows, int cols) {
+	int ***cube = (int ***)malloc(depth * sizeof(int **));
+
+	for(int i = 0; i < depth; i++) {
+		*(cube + i) = (int **)malloc(rows * sizeof(int *));
+
+		for(int j = 0; j < rows; j++) {
+			*(*(cube + i) + j) = (int *)malloc(cols * sizeof(int));
+		}
+	}
+
+	return cube;
+}
+
 		*(arrayOfPointers + i) = (int *)malloc((i + 1) * sizeof(int));
 		for(int j = 0; j <= i; j++) {
 			*(*(arrayOfPointers + i) + j) = j + 1;
@@ -87,8 +111,57 @@ int main(void) {
 	*/
 
 	displayMatrix(&matrixOne[0][0], 2, 3);
+	displayCube(&cube[0][0][0], 3, 2, 4);
+
 
 	return 0;
+}
+
+int *allocateVector(int size) {
+	int *vector = (int *)malloc(size * sizeof(int));
+	if(!vector) return NULL;
+	return vector;
+}
+
+int **allocateMatrix(int rows, int cols) {
+	int **matrix = (int **)malloc(rows * sizeof(int *));
+	if(matrix == NULL) return NULL;
+
+	for(int i = 0; i < rows; i++) {
+		*(matrix + i) = (int *)malloc(cols * sizeof(int));
+	}
+	return matrix;
+}
+
+int ***allocateCube(int depth, int rows, int cols) {
+	int ***cube = (int ***)malloc(depth * sizeof(int **));
+
+	for(int i = 0; i < depth; i++) {
+		*(cube + i) = (int **)malloc(rows * sizeof(int *));
+
+		for(int j = 0; j < rows; j++) {
+			*(*(cube + i) + j) = (int *)malloc(cols * sizeof(int));
+		}
+	}
+
+	return cube;
+}
+
+int ****allocateHyperCube(int time, int depths, int rows, int cols) {
+	int ****hypercube = (int ****)malloc(time * (sizeof(int ***)));
+
+	for(int i = 0; i < time; i++) {
+		*(hypercube + i) = (int ***)malloc(depths * sizeof(int **));
+
+		for(int j = 0; j < depths; j++) {
+			*(*(hypercube + i) + j) = (int **)malloc(rows * sizeof(int *));
+					for(int k = 0; k < rows; k++) {
+						*(*(*(hypercube + i) + j) + k) = (int *)malloc(cols * sizeof(int));
+					}
+		}
+	}
+
+	return hypercube;
 }
 
 void displayVector(int *arr, int vectorSize) {
@@ -103,7 +176,20 @@ void displayMatrix(int *arr, int rows, int cols) {
 			printf("%d ", *(arr + (i * cols) + j));
 		}
 	}
+	printf("\n");
 }
+
+void displayCube(int *arr, int depth, int rows, int cols) {
+	for(int i = 0; i < depth; i++) {
+		for(int j = 0; j < rows; j++) {
+			for(int k = 0; k < cols; k++) {
+				printf("%d ", *(arr + i * rows * cols + j * cols + k));
+			}
+		}
+	}
+	printf("\n");
+}
+
 
 char *getLine(void) {
 	size_t incrementalLength = 10;
@@ -151,8 +237,4 @@ char *trim(char *buffer) {
 	return (char *)realloc(buffer, strlen(buffer) + 1);
 }
 
-int *allocateVector(int size) {
-	int *vector = (int *)malloc(size * sizeof(int));
-	if(!vector) return NULL;
-	return vector;
-}
+
