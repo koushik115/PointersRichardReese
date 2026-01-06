@@ -11,9 +11,9 @@ int ***allocateCube(int depth, int rows, int cols);
 int ****allocateHyperCube(int time, int depths, int rows, int cols);
 
 void freeVector(int *vector);
-void freeMatrix(int **matrix);
-void freeCube(int ***cube);
-void freeHyperCube(int ****hypercube);
+void freeMatrix(int **matrix, int rows);
+void freeCube(int ***cube, int depths, int rows);
+void freeHyperCube(int ****hypercube, int time, int depths, int rows);
 
 void displayVector(int *arr, int vectorSize);
 void displayMatrix(int *arr, int rows, int cols); // Non Conatgious
@@ -162,6 +162,56 @@ int ****allocateHyperCube(int time, int depths, int rows, int cols) {
 	}
 
 	return hypercube;
+}
+
+void freeVector(int *vector) {
+	free(vector);
+	vector = NULL;
+}
+
+void freeMatrix(int **matrix, int rows) {
+	for(int i = 0; i < rows; i++) {
+		free(*(matrix + i));
+		*(matrix + i) = NULL;
+	}
+
+	free(matrix);
+	matrix = NULL;
+}
+
+void freeCube(int ***cube, int depth, int rows) {
+	for(int i = 0; i < depth; i++) {
+		for(int j = 0; j < rows; j++) {
+			free(*(*(cube + i) + j));
+			*(*(cube + i) + j) = NULL;
+		}
+
+		free(*(cube + i));
+		*(cube + i) = NULL;
+	}
+
+	free(cube);
+	cube = 	NULL;
+}
+
+void freeHyperCube(int ****hypercube, int time, int depth, int rows) {
+	for(int i = 0; i < time; i++) {
+		for(int j = 0; j < depth; j++) {
+			for(int k = 0; k < rows; k++) {
+				free(*(*(*(hypercube + i) + j) + k));
+				*(*(*(hypercube + i) + j) + k) = NULL;
+			}
+
+			free(*(*(hypercube + i) + j));
+			*(*(hypercube + i) + j) = NULL;
+		}
+		
+		free(*(hypercube + i));
+		*(hypercube + i) = NULL;
+	}
+
+	free(hypercube);
+	hypercube = NULL;
 }
 
 void displayVector(int *arr, int vectorSize) {
