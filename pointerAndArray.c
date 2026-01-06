@@ -18,6 +18,7 @@ void freeHyperCube(int ****hypercube, int time, int depths, int rows);
 void displayVector(int *arr, int vectorSize);
 void displayMatrix(int *arr, int rows, int cols); // Non Conatgious
 void displayCube(int *arr, int depth, int rows, int cols);
+void displayHyperCube(int *arr, int time, int depths, int rows, int cols);
 
 int main(void) {
 	/*
@@ -238,6 +239,18 @@ void displayCube(int *arr, int depth, int rows, int cols) {
 		}
 	}
 	printf("\n");
+}
+
+void displayHyperCube(int *arr, int time, int depths, int rows, int cols) {
+	for(int i = 0; i < time; i++) {
+		for(int j = 0; j < depths; j++) {
+			for(int k = 0; k < rows; k++) {
+				for(int l = 0; l < cols; l++) {
+					printf("%d ", *(arr + (i * depths * rows * cols) + (j * rows * cols) + (k * cols) + l));
+				}
+			}
+		}
+	}
 }
 
 
