@@ -21,6 +21,12 @@ void freeMatrix(int **matrix, int rows);
 void freeCube(int ***cube, int depths, int rows);
 void freeHyperCube(int ****hypercube, int time, int depths, int rows);
 
+void freeVectorContiguous(int *vector, int size);
+void freeMatrixContiguous(int **matrix, int rows, cols);
+void freeCubeContiguous(int ***cube, int depths, int rows, int cols);
+void freeHyperCubeContiguous(int ****hypercube, int time, int depths, int rows, int cols);
+
+
 void displayVector(int *arr, int vectorSize);
 void displayMatrix(int *arr, int rows, int cols); // Non Conatgious
 void displayCube(int *arr, int depth, int rows, int cols);
@@ -342,6 +348,28 @@ void freeHyperCube(int ****hypercube, int time, int depth, int rows) {
 
 	free(hypercube);
 	hypercube = NULL;
+}
+
+void freeVectorContiguous(int *vector) {
+	free(vector);
+}
+
+void freeMatrixContiguous(int **matrix) {
+	free(*matrix);
+	free(matrix);
+}
+
+void freeCubeContiguous(int ***cube) {
+	free(**cube);
+	free(*cube);
+	free(cube);
+}
+
+void freeHyperCubeContiguous(int ****hypercube) {
+	free(***hypercube);
+	free(**hypercube);
+	free(*hypercube);
+	free(hypercube);
 }
 
 void displayVector(int *arr, int vectorSize) {
