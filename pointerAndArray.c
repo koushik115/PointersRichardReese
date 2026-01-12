@@ -21,10 +21,10 @@ void freeMatrix(int **matrix, int rows);
 void freeCube(int ***cube, int depths, int rows);
 void freeHyperCube(int ****hypercube, int time, int depths, int rows);
 
-void freeVectorContiguous(int *vector, int size);
-void freeMatrixContiguous(int **matrix, int rows, cols);
-void freeCubeContiguous(int ***cube, int depths, int rows, int cols);
-void freeHyperCubeContiguous(int ****hypercube, int time, int depths, int rows, int cols);
+void freeVectorContiguous(int *vector);
+void freeMatrixContiguous(int **matrix);
+void freeCubeContiguous(int ***cube);
+void freeHyperCubeContiguous(int ****hypercube);
 
 
 void displayVector(int *arr, int vectorSize);
