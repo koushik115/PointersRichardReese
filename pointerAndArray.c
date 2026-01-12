@@ -10,6 +10,12 @@ int **allocateMatrix(int rows, int cols);
 int ***allocateCube(int depth, int rows, int cols);
 int ****allocateHyperCube(int time, int depths, int rows, int cols);
 
+int *allocateVectorContiguous(int size);
+int **allocateMatrixContiguous(int rows, int cols);
+int ***allocateCubeContiguous(int depths, int rows, int cols);
+int ****allocateHyperCubeContiguous(int times, int depths, int rows, int cols);
+
+
 void freeVector(int *vector);
 void freeMatrix(int **matrix, int rows);
 void freeCube(int ***cube, int depths, int rows);
@@ -111,7 +117,25 @@ int ***allocateCube(int depth, int rows, int cols) {
 		displayVector(*(arrayOfPointers + i), i + 1);
 		free(*(arrayOfPointers + i));
 	}
-	*/
+        */	
+	printf("=============== Jagged Array and Pointers ===============\n");
+	int (*(arr1[])) = { (int[]) {0, 1, 2},
+			    (int[]) {3, 4, 5},
+			    (int[]) {6, 7, 8},
+			  };
+
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 3; j++) {
+			printf("arr1[%d][%d]	Address: %p	Value: %d\n", i, j, &arr1[i][j], arr1[i][j]);
+		}
+	}
+
+	int (*(arr2[])) = { (int[]) {0},
+			    (int[]) {0, 1},
+			    (int[]) {0, 1, 2},
+			    (int[]) {0, 1, 2, 3}
+			  };
+
 
 	/*
 	displayMatrix(&matrixOne[0][0], 2, 3);
@@ -223,6 +247,51 @@ int ****allocateHyperCube(int time, int depths, int rows, int cols) {
 	}
 
 	return hypercube;
+}
+
+int *allocateVecorContiguous(int size) {
+	int *vector = (int *)malloc(size * sizeof(int));
+	return vector;
+}
+
+int **allocateMatrixContiguous(int rows, int cols) {
+	int **matrix = (int **)malloc(rows * sizeof(int *));
+	int *vector = (int *)malloc(rows * cols * sizeof(int));
+	for(int i = 0; i < rows; i++)
+		*(matrix + i) = vector + i * cols;
+	return **matrix;
+}
+
+int ***allocateCubeContiguous(int depths, int rows, int cols) {
+	int ***cube = (int ***)malloc(depths * sizeof(int **));
+	int **matrix = (int **)malloc(depths * rows * sizeof(int *));
+	int *vector = (int *)malloc(depths * rows * cols * sizeof(int));
+
+	for(int i = 0; i < depths; i++) {
+		*(cube + i) = matrix + i * rows;
+		for(int j = 0; j < rows; j++) {
+			*(*(cube + i) + j) = vector + (i * rows * cols) + (j * cols);
+		}
+	}
+
+	return cube;
+}
+
+int ****allocateHyperCubeContiguous(int time, int depths, int rows, int cols) {
+	int ****hypercube = (int ****)malloc(time * sizeof(int ***));
+	int ***cube = (int ***)malloc(time * depths * sizeof(int **));
+	int **matrix = (int **)malloc(time * depths * rows * sizeof(int *));
+	int *vector = (int *)malloc(time * depths * rows * cols * sizeof(int));
+	
+	for(int i = 0; i < time; i++) {
+		*(hypercube + i) = cube + (i * depths);
+		for(int j = 0; j < depths; j++) {
+			*(*(hypercube + i) + j) = matrix + (i * depths * rows) + (j * rows);
+			for(int k = 0; k < rows; k++) {
+				*(*(*(hypercube + i) + j) + k) = vector + (i * depths * rows * cols) + (j * rows * cols) + (k * cols);
+			}
+		}
+	}
 }
 
 void freeVector(int *vector) {
