@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *getLine(void);
-char *trim(char *buffer);
-
 int *allocateVector(int size);
 int **allocateMatrix(int rows, int cols);
 int ***allocateCube(int depth, int rows, int cols);
@@ -15,7 +12,6 @@ int **allocateMatrixContiguous(int rows, int cols);
 int ***allocateCubeContiguous(int depths, int rows, int cols);
 int ****allocateHyperCubeContiguous(int times, int depths, int rows, int cols);
 
-
 void freeVector(int *vector);
 void freeMatrix(int **matrix, int rows);
 void freeCube(int ***cube, int depths, int rows);
@@ -25,7 +21,6 @@ void freeVectorContiguous(int *vector);
 void freeMatrixContiguous(int **matrix);
 void freeCubeContiguous(int ***cube);
 void freeHyperCubeContiguous(int ****hypercube);
-
 
 void displayVector(int *arr, int vectorSize);
 void displayMatrix(int *arr, int rows, int cols); // Non Conatgious
@@ -409,52 +404,3 @@ void displayHyperCube(int *arr, int time, int depths, int rows, int cols) {
 		}
 	}
 }
-
-
-char *getLine(void) {
-	size_t incrementalLength = 10;
-	size_t maximumLength = incrementalLength;
-	size_t length = 0;
-	char *buffer = (char *)malloc(incrementalLength);
-	char *currentPos = buffer;
-	int character;
-
-	if(!currentPos) return NULL;
-
-	while(1) {
-		character = fgetc(stdin);
-
-		if(character == '\n') break;
-
-		if(++length >= maximumLength) {
-			char *newBuffer = (char *)realloc(buffer, maximumLength += incrementalLength);
-
-			if(!newBuffer) {
-				free(buffer);
-				return NULL;
-			}
-		
-		currentPos = newBuffer + (currentPos - buffer);
-		buffer = newBuffer;
-		
-		}
-		*currentPos++ = character;
-	}
-
-	*currentPos = '\0';
-	return buffer;
-}
-
-char *trim(char *buffer) {
-	char *old = buffer;
-	char *new = buffer;
-
-	while(*old == ' ') old++;
-	while((*new = *old)) {
-		old++; new++;
-	}
-
-	return (char *)realloc(buffer, strlen(buffer) + 1);
-}
-
-
