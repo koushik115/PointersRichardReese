@@ -3,6 +3,8 @@
 #include <string.h>
 #include <wchar.h>
 
+size_t stringLength(char *string);
+
 int main(void) {
 	wchar_t wideCharacter;
 	printf("%lu\n", sizeof(wideCharacter)); // Size is 4 bytes
@@ -87,7 +89,7 @@ int main(void) {
 	 * }
 	 */
 
-	/* Standard String Operation */
+	/* Standard String Operation: int strcmp(const char *s1, const char *s2) */
 	char *command = (char *)malloc(16);
 	printf("Enter a command: ");
 	scanf("%s", command);
@@ -115,7 +117,7 @@ int main(void) {
 	 *
 	 */
 
-	/* Copying Strings */
+	/* Copying Strings: char *strcpy(char *s1, const char *s2); */
 	for(size_t count = 0; count < 30; count++) {
 
 		char name[32];
@@ -129,5 +131,63 @@ int main(void) {
 		free(names[count]);
 	}
 
+	/* Two pointers can reference the same string. When two pointers reference the same location, this is called aliasing.
+	 * The assignment of one pointer to another does not result in the string being copied. Instead, it simply copies the string address
+	 * char *pageHeader[300];
+	 * pageHeader[12] = "Amorphous Compounds";
+	 * pageHeader[13] = pageHeader[12]; // pageHeader[13] is an alias of pageHeader[12] and points to the same string literal pool
+	 */
+
+	/* Concatenation Strings: char *strcat(char *s1, const char *s2); */
+	char *error = "ERROR: ";
+	char *errorMessage = "Not enough memory";
+
+	char *buffer = (char *)malloc(strlen(error) + strlen(errorMessage) + 1);
+	strcpy(buffer, error);
+	strcat(buffer, errorMessage);
+
+	printf("%s\n", buffer); // ERROR: Not enough memory
+	printf("%s\n", error);  // ERROR
+	printf("%s\n", errorMessage); // Not enough memory
+	
+	char errorArray[] = "ERROR: ";
+	char errorMessageArray[] = "Not enough memory";
+	/*
+	 * errorArray = strcat(errorArray, errorMessageArray); // Syntax error
+	 * strcat(errorArray, errorMessageArray); // This will corrupt the stack frame
+	 *
+	 */
+
+	char *path = "C:";
+	char *currentPath = (char *)malloc(strlen(path) + 2);
+	strcpy(currentPath, path);
+	currentPath = strcat(currentPath, "\\");
+
+
+	/* Passing Strings */
+	/*
+	 * Refer String Length function
+	 */
+	char simpleArray[] = "simple string";
+	char *simplePtr = (char *)malloc(strlen("simple string") + 1);
+	strcpy(simplePtr, "simple string");
+	printf("%lu\n", stringLength(simplePtr));
+	printf("%lu\n", stringLength(simpleArray));
+	/* printf("%d\n", stringLength(&simpleArray)); */ // Redundant and unecessary
+	printf("%lu\n", stringLength(&simpleArray[0]));
+	/* We could have declared the formal parameter of the stringLength function using array notaion instead of pointer notaion
+	 * The function body will remain same, this change will have no effect on how function is invoked and its behavious
+	 *
+	 */
+
+
 	return 0;
+}
+
+size_t stringLength(char *string) {
+	size_t length = 0;
+
+	while(*(string++)) length++;
+
+	return length; 
 }
